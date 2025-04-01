@@ -25,7 +25,8 @@
       }
     ],
     "subtitles": [],
-    "controller": {}
+    "controller": {},
+    "auto": 0
   },
   {
     "src": "video4.mp4",
