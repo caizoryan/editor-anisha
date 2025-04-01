@@ -42,7 +42,7 @@
     },
     {
       "type": "code",
-      "output": "import {mounted,mem,mut, eff_on, render, sig, h} from \"/lib/solid/monke.js\"\nimport { THREE, addons } from \"/lib/threejs/three.js\"\nimport {Keymanager} from \"/lib/keymanager.js\"\n\nconst M = mut({\n  fn: {},\n  eff_on: [],\n  off: {\n    x: 0,\n    y: -10,\n    z: -.1,\n  }\n})\n\ndocument.M = M\n\n// basic styling\nlet style = document.createElement(\"style\")\nstyle.innerText= `*{padding: 0;margin:0}`\ndocument.head.appendChild(style)\n\nconst scene = new THREE.Scene();\nconst camera = new THREE.PerspectiveCamera( 85, window.innerWidth / window.innerHeight, 0.1, 1000 );\nconst orbit = addons.OrbitControls\nconst loader = new THREE.TextureLoader()\nconst renderer = new THREE.WebGLRenderer();\n\nfunction initTHREE(){\n  renderer.setSize( window.innerWidth, window.innerHeight );\n  document.querySelector(\"#THREE\")?.appendChild( renderer.domElement );\n  animate()\n}\n\n\nfunction apply_offset(){ }\n\nlet c = new orbit(camera, renderer.domElement)\ncamera.position.z = 5;\nc.update()\n\nlet keys = new Keymanager()\nkeys.on(\"ArrowUp\", () => camera.position.z -= 2)\nkeys.on(\"ArrowDown\", () => camera.position.z += 2)\n\nwindow.addEventListener(\"keydown\",(e) => keys.event(e))\n\nfunction animate() {\n  requestAnimationFrame(animate)\n  renderer.render( scene, camera );\n  c.update()\n}\n\nconst Root = () => {\n  \n  mounted(initTHREE)\n  let style = `\n    all: unset;\n    color: white;\n    font-family: monospace;\n    border: 1px dotted #fff8;\n    padding: .5em;\n    position: fixed;\n    bottom: 2em;\n    left: 5em;\n  `\n  \n  let button = () => h(\"button\",{style}, \"Problem kya hai bhai\")\n  return h(\"div.main\", \n           h(\"div#THREE\"),\n           button\n          )\n}\n\nrender(Root, document.body)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+      "output": "import {mounted,mem,mut, eff_on, render, sig, h} from \"/lib/tapri/monke.js\"\nimport {hdom} from \"/lib/tapri/hdom/index.js\"\nimport { THREE, addons } from \"/lib/threejs/three.js\"\nimport {Keymanager} from \"/lib/keymanager.js\"\n\nconst M = mut({\n  fn: {},\n  eff_on: [],\n  off: {\n    x: 0,\n    y: -10,\n    z: -.1,\n  }\n})\n\ndocument.M = M\n\n// basic styling\nlet style = document.createElement(\"style\")\nstyle.innerText= `*{padding: 0;margin:0}`\ndocument.head.appendChild(style)\n\nconst scene = new THREE.Scene();\nconst camera = new THREE.PerspectiveCamera( 85, window.innerWidth / window.innerHeight, 0.1, 1000 );\nconst orbit = addons.OrbitControls\nconst loader = new THREE.TextureLoader()\nconst renderer = new THREE.WebGLRenderer();\n\nfunction initTHREE(){\n  renderer.setSize( window.innerWidth, window.innerHeight );\n  document.querySelector(\"#THREE\")?.appendChild( renderer.domElement );\n  animate()\n}\n\n\nfunction apply_offset(){ }\n\nlet c = new orbit(camera, renderer.domElement)\ncamera.position.z = 5;\nc.update()\n\nlet keys = new Keymanager()\nkeys.on(\"ArrowUp\", () => camera.position.z -= 2)\nkeys.on(\"ArrowDown\", () => camera.position.z += 2)\n\nwindow.addEventListener(\"keydown\",(e) => keys.event(e))\n\nfunction animate() {\n  requestAnimationFrame(animate)\n  renderer.render( scene, camera );\n  c.update()\n}\n\nconst Root = () => {\n  mounted(initTHREE)\n  let style = `\n    all: unset;\n    color: white;\n    font-family: monospace;\n    border: 1px dotted #fff8;\n    padding: .5em;\n  `\n\n  let container = `\n    position: fixed;\n    bottom: 2em;\n    left: 5em;\n  `\n\n  const play_fn = (i) => () => {\n    decision_tree.forEach(n => {\n      n.controller?.focus(false)\n      n.controller?.pause()\n    })\n    \n    decision_tree[i].controller?.focus(true)\n    decision_tree[i].controller?.seek(0)\n    decision_tree[i].controller?.play()\n  }\n  \n  let button = decision_tree.map((node, i) => [\n    \"button\",\n    {style, \n     onclick: play_fn(i)},\n    node.src\n  ])\n\n  \n  return hdom([\".main\", \n               [\"#THREE\",  \n               [\"#container\", {style: container},  button ]]\n              ])\n}\n\n\n\n\n\n\n\n\n\n\n\n",
       "start": 0,
       "drag_x": 1154.4967982744517,
       "drag_y": 461.70618422736453,
@@ -56,11 +56,11 @@
     {
       "type": "code",
       "id": "he3gnn",
-      "start": 1675,
+      "start": 2087,
       "drag_x": 1820.1371397277696,
       "drag_y": 670.9804086103186,
       "focused": false,
-      "output": "\n/**\n@typedef {Object} vec3 \n@property {number} vec3.x\n@property {number} vec3.y\n@property {number} vec3.z\n\n@param {vec3} vec1\n@param {vec3} vec2\n*/\nfunction eq(vec1, vec2){\n  return vec1.x === vec2.x \n    && vec1.y == vec2.y\n    && vec1.z == vec2.z\n}\n\n\nfunction shuffle(arr) {\n  return arr.sort(() => Math.random() > .5 ? 1 : -1)\n  \n}\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+      "output": "\n/**\n@typedef {Object} vec3 \n@property {number} vec3.x\n@property {number} vec3.y\n@property {number} vec3.z\n\n@param {vec3} vec1\n@param {vec3} vec2\n*/\nfunction eq(vec1, vec2){\n  return vec1.x === vec2.x \n    && vec1.y == vec2.y\n    && vec1.z == vec2.z\n}\n\n\nfunction shuffle(arr) {\n  return arr.sort(() => Math.random() > .5 ? 1 : -1)\n  \n}\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
       "cursor": 0,
       "active": false,
       "focus": false,
@@ -70,12 +70,12 @@
     {
       "type": "code",
       "id": "v2a3aw",
-      "start": 2028,
+      "start": 2446,
       "drag_x": 2515.8732356681644,
       "drag_y": 1120.9098588534523,
       "focused": false,
-      "output": "/**\n@typedef {{\n  text: string,\n  next: number,\n}} Decision \n\n@typedef {{\n  text: string,\n  start: number,\n  end: number,\n}} Subtitle\n*/\n\n/**\n@typedef {{\n  src: string,\n  options: Decision[],\n  subtitles: Subtitle[],\n  controller: (null | {\n    play: () => void,\n    pause: () => void,\n    seek: (num: number) => void,\n    focus: (to_focus: boolean) => void\n  })\n}} SourceNode \n*/\n\n/**\n@type {SourceNode[]}\n*/\nlet decision_tree = [\n  // 0. Zero\n  {\n    src: \"video1.mp4\",\n    options: [ \n      { text: \"something...\", next: 1, }, \n    ],\n    subtitles: [],\n    controller: null\n  },\n  \n  // 1. One\n  {\n    src: \"video2.mp4\",\n    options: [ \n      { text: \"get up and run\", next: 2, }, \n    ],\n    subtitles: [],\n    controller: null\n  },\n\n  // 2. Two\n  {\n    src: \"video3.mp4\",\n    options: [ \n      { text: \"go back home\", next: 0, }, \n    ], \n    subtitles: [],\n    controller: null\n  }\n]\n\nM.decision_tree = decision_tree\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-      "cursor": 301,
+      "output": "/**\n@typedef {{\n  text: string,\n  next: number,\n}} Decision \n\n@typedef {{\n  text: string,\n  start: number,\n  end: number,\n}} Subtitle\n*/\n\n/**\n@typedef {{\n  src: string,\n  options: Decision[],\n  subtitles: Subtitle[],\n  controller: (null | {\n    play: () => void,\n    pause: () => void,\n    seek: (num: number) => void,\n    focus: (to_focus: boolean) => void\n  })\n}} SourceNode \n*/\n\n/**\n@type {SourceNode[]}\n*/\nlet decision_tree\n// let decision_tree = Array(9).fill(0).map((_, i) => ({\n//   src: \"video\"+(i+1)+\".mp4\",\n//   options: [{\n//     text: \"random\",\n//     next: Math.floor(Math.random()*9)\n//   }],\n//   subtitles: [],\n//   controller: null\n// }))\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+      "cursor": 263,
       "active": false,
       "focus": false,
       "drag_w": 600,
@@ -83,27 +83,13 @@
     },
     {
       "type": "code",
-      "id": "wcbpv2",
-      "start": 2966,
-      "drag_x": 3304.6743637702957,
-      "drag_y": 1120.2828165094882,
-      "focused": false,
-      "output": "let root = \"/fs/media/anisha-thesis/\"\n\ndecision_tree.forEach((node) => {\n  let viddy = document.createElement(\"video\")\n  viddy.src = root + node.src\n  let f = create_video_plane(viddy)\n  f.position.x = 0\n  scene.add(f)\n\n  node.controller = {\n    play: () => viddy.play(),\n    pause: () => viddy.pause(),\n    seek: (t) => viddy.currentTime = t,\n    focus: (bool) => bool ? f.position.x = 0 : f.position.x = 10 \n  }\n    \n})\n\ndecision_tree.forEach(n => n.controller?.focus(false))\ndecision_tree[0].controller?.focus(true)\n\n\n\n\n\n\n\n\n\n\n",
-      "cursor": 219,
-      "active": true,
-      "focus": true,
-      "drag_w": 600,
-      "drag_h": 530
-    },
-    {
-      "type": "code",
       "id": "mf4rl",
-      "start": 3495,
+      "start": 3122,
       "drag_x": 4393.437441085362,
       "drag_y": 2320.2884292730214,
       "focused": false,
-      "output": "\n/**\n@description make sure video is loaded\n@param {HTMLVideoElement} video \n*/\nfunction create_video_plane(video){\n  // make a video element\n  // video will always be 4:3\n  // make plane that size\n  const texture = new THREE.VideoTexture(video)\n  \n  const geometry = new THREE.PlaneGeometry(8, 6)\n  \n  const material = new THREE.MeshBasicMaterial({\n    map: texture,\n    // opacity: .2,\n    // transparent: true,\n    // use texture of video\n  })\n  const plane = new THREE.Mesh(geometry, material);\n\n  return plane\n}\n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-      "cursor": 397,
+      "output": "\n/**\n@description make sure video is loaded\n@param {HTMLVideoElement} video \n*/\nfunction create_video_plane(video){\n  // make a video element\n  // video will always be 4:3\n  // make plane that size\n  const texture = new THREE.VideoTexture(video)\n  \n  const geometry = new THREE.PlaneGeometry(8, 6)\n  \n  const material = new THREE.MeshBasicMaterial({\n    map: texture,\n    // opacity: .2,\n    // transparent: true,\n    // use texture of video\n  })\n  const plane = new THREE.Mesh(geometry, material);\n\n  return plane\n}\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+      "cursor": 517,
       "active": false,
       "focus": false,
       "drag_w": 600,
@@ -114,38 +100,158 @@
       "id": "d53gsj",
       "active": false,
       "focus": false,
-      "start": 4039,
+      "start": 3661,
       "drag_x": 4388.468109408692,
       "drag_y": 957,
       "drag_w": 600,
       "drag_h": 830,
       "output": "",
       "focused": false,
-      "renderer": "function() {\n  let one_coords = mut({ x: 0, y: 0 })\n  let two_coords = mut({ x: 0, y: 0 })\n  \n  eff_on(() => one_coords.x, \n         () => {\n           if (m()) m().off.x = one_coords.x / 200\n         })\n  \n  eff_on(() => one_coords.y,\n         () => {\n           if (m()) m().off.z = (one_coords.y / 200) * -1\n         })\n  \n  let wi = 50, he=50\n  \n  let one_ref = (e) => one_ref = e\n  mounted (() => {\n      const set_left = (x) => one_coords.x = x\n      const set_top = (y) => one_coords.y = y\n      setTimeout(() => drag(one_ref,  {set_left, set_top} ), 200) \n  })\n\n  \n  let one = mem(() => `\n    position: absolute;\n    top: ${one_coords.y}px;\n    left: ${one_coords.x}px;\n    width: ${wi}px;\n    height: ${he}px;\n    background: #000;\n  `)\n  \n  \n  let parent = `\n    position: relative;\n    width: 400px;\n    height: 400px;\n  `\n  \n  return h(\"div\", {style: parent},  h(\"div\", {style: one, ref: one_ref}))\n}\n  ",
+      "renderer": "function() {\n  let one_coords = mut({ x: 0, y: 0 })\n  let two_coords = mut({ x: 0, y: 0 })\n  \n  eff_on(() => one_coords.x, \n         () => {\n           if (m()) m().off.x = one_coords.x / 200\n         })\n  \n  eff_on(() => one_coords.y,\n         () => {\n           if (m()) m().off.z = (one_coords.y / 200) * -1\n         })\n  \n  let wi = 50, he=50\n  \n  let one_ref = (e) => one_ref = e\n  mounted (() => {\n      const set_left = (x) => one_coords.x = x\n      const set_top = (y) => one_coords.y = y\n      setTimeout(() => drag(one_ref,  {set_left, set_top} ), 200) \n  })\n\n  \n  let one = mem(() => `\n    position: absolute;\n    top: ${one_coords.y}px;\n    left: ${one_coords.x}px;\n    width: ${wi}px;\n    height: ${he}px;\n    background: #000;\n  `)\n  \n  \n  let parent = `\n    position: relative;\n    width: 400px;\n    height: 400px;\n  `\n  \n  return {\n    render: () => h(\"div\", {style: parent},  h(\"div\", {style: one, ref: one_ref}))\n  }\n}\n  ",
       "cursor": 0
     },
     {
       "type": "sandbox",
       "id": "jesx6",
+      "active": true,
+      "focus": true,
+      "start": 3661,
+      "drag_x": 5022.418389648743,
+      "drag_y": 933.7902024649353,
+      "drag_w": 890,
+      "drag_h": 1100.2008995502251,
+      "output": "decision_tree = [{\"src\":\"video1.mp4\",\"options\":[{\"text\":\"random\",\"next\":5}],\"subtitles\":[],\"controller\":{}},{\"src\":\"video2.mp4\",\"options\":[{\"text\":\"random\",\"next\":5}],\"subtitles\":[],\"controller\":{}},{\"src\":\"video3.mp4\",\"options\":[{\"text\":\"random\",\"next\":6}],\"subtitles\":[],\"controller\":{}},{\"src\":\"video4.mp4\",\"options\":[{\"text\":\"random\",\"next\":5}],\"subtitles\":[],\"controller\":{}},{\"src\":\"video5.mp4\",\"options\":[{\"text\":\"random\",\"next\":1}],\"subtitles\":[],\"controller\":{}},{\"src\":\"video6.mp4\",\"options\":[{\"text\":\"random\",\"next\":0}],\"subtitles\":[],\"controller\":{}},{\"src\":\"video7.mp4\",\"options\":[{\"text\":\"random\",\"next\":6}],\"subtitles\":[],\"controller\":{}},{\"src\":\"video8.mp4\",\"options\":[{\"text\":\"random\",\"next\":6}],\"subtitles\":[],\"controller\":{}},{\"src\":\"video9.mp4\",\"options\":[{\"text\":\"random\",\"next\":7},{\"text\":\"randommmm\",\"next\":1}],\"subtitles\":[],\"controller\":{}}]",
+      "focused": false,
+      "renderer": "function(el) {\n  if (!m()) return\n  let dt = sig(el.decision_tree ? [...el.decision_tree] : [...m().decision_tree])\n  \n  let parent = \"/fs/media/anisha-thesis/\"\n  let cur = sig(el.cur ? el.cur : 0)\n  let next = () => cur.set(cur() + 1)\n  let prev = () => cur.set(cur() - 1)\n  let src_on = (i) => parent+dt()[i]?.src\n  let cur_src = mem(() => src_on(cur()))\n  let cur_options = mem(() =>dt()[cur()]?.options)\n\n  let add_to_cur = (message, next) => {\n    let temp = dt().map((e) => JSON.parse(JSON.stringify(e)))\n    temp[cur()].options.push({text: message, next})\n    console.log(temp[cur()])\n    dt.set(temp)\n    //dt()[cur()].options = [...dt[cur()].options, ]\n  }\n  let video_style = `width:300px;`\n  let video_smol  = `width: 85px;`\n\n  const nuxt = \n    (option) => h(\n      \"div\", \n        h(\"video\", { \n          src: src_on(option.next), \n          style: video_smol, \n          controls: true\n        }),\n        h(\"p\", option.text),\n        \n      )\n  \n  let split = `display: grid; grid-template-columns: 1fr 1fr;`\n  let video = () => h(\"div\", {style: split},\n           h(\"video\", {src: cur_src, style:video_style, controls: true} ),\n           h(\".next\", mem(() => cur_options()?.map(nuxt)),\n             h(\"button\", {onclick: () => {\n                // add random option\n                add_to_cur(\"randommmm\", 1)\n                console.log(cur_options())\n              }}, \"add\")\n            ))\n  \n\n  let r = () => h(\n      h(\"div\",\n         // next prev\n         h(\"div\", \n          h(\"button\", {onclick:prev}, \"prev\"),\n          h(\"span\", cur),\n          h(\"button\", {onclick:next}, \"next\"),\n          ),\n          video\n       ))\n\n         //video\n    //]\n    //)\n  \n  return {\n    write: (el) => {\n      el.output = \"decision_tree = \" + JSON.stringify(dt())\n      el.decision_tree = dt()\n      el.cur = cur()\n      console.log(\"EL!\", el)\n    },\n    render: r\n  }\n}\n  ",
+      "cursor": 1337,
+      "decision_tree": [
+        {
+          "src": "video1.mp4",
+          "options": [
+            {
+              "text": "random",
+              "next": 5
+            }
+          ],
+          "subtitles": [],
+          "controller": {}
+        },
+        {
+          "src": "video2.mp4",
+          "options": [
+            {
+              "text": "random",
+              "next": 5
+            }
+          ],
+          "subtitles": [],
+          "controller": {}
+        },
+        {
+          "src": "video3.mp4",
+          "options": [
+            {
+              "text": "random",
+              "next": 6
+            }
+          ],
+          "subtitles": [],
+          "controller": {}
+        },
+        {
+          "src": "video4.mp4",
+          "options": [
+            {
+              "text": "random",
+              "next": 5
+            }
+          ],
+          "subtitles": [],
+          "controller": {}
+        },
+        {
+          "src": "video5.mp4",
+          "options": [
+            {
+              "text": "random",
+              "next": 1
+            }
+          ],
+          "subtitles": [],
+          "controller": {}
+        },
+        {
+          "src": "video6.mp4",
+          "options": [
+            {
+              "text": "random",
+              "next": 0
+            }
+          ],
+          "subtitles": [],
+          "controller": {}
+        },
+        {
+          "src": "video7.mp4",
+          "options": [
+            {
+              "text": "random",
+              "next": 6
+            }
+          ],
+          "subtitles": [],
+          "controller": {}
+        },
+        {
+          "src": "video8.mp4",
+          "options": [
+            {
+              "text": "random",
+              "next": 6
+            }
+          ],
+          "subtitles": [],
+          "controller": {}
+        },
+        {
+          "src": "video9.mp4",
+          "options": [
+            {
+              "text": "random",
+              "next": 7
+            },
+            {
+              "text": "randommmm",
+              "next": 1
+            }
+          ],
+          "subtitles": [],
+          "controller": {}
+        }
+      ],
+      "cur": 8
+    },
+    {
+      "type": "code",
+      "id": "wcbpv2",
+      "start": 4527,
+      "drag_x": 3304.6743637702957,
+      "drag_y": 1120.2828165094882,
+      "focused": false,
+      "output": "let root = \"/fs/media/anisha-thesis/\"\n\nconsole.log(decision_tree)\ndecision_tree.forEach((node) => {\n  let viddy = document.createElement(\"video\")\n  viddy.src = root + node.src\n  let f = create_video_plane(viddy)\n  f.position.x = 0\n  scene.add(f)\n\n  node.controller = {\n    play: () => viddy.play(),\n    pause: () => viddy.pause(),\n    seek: (t) => viddy.currentTime = t,\n    focus: (bool) => bool ? f.position.x = 0 : f.position.x = 10 \n  }\n})\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\nrender(Root, document.body)\n\n\n\n\n\n\n\n\n\n\n\n\n",
+      "cursor": 497,
       "active": false,
       "focus": false,
-      "start": 4039,
-      "drag_x": 5022.418389648743,
-      "drag_y": 958.3539206058648,
-      "drag_w": 890,
-      "drag_h": 830,
-      "output": "",
-      "focused": false,
-      "renderer": "function() {\n  console.log(\"dt\", m().decision_tree)\n  let parent = \"/fs/media/anisha-thesis/\"\n  let cur = sig(0)\n  let next=() => cur.set(cur() + 1)\n  let prev=() => cur.set(cur() - 1)\n  let src_on = (i) => parent+m().decision_tree[i]?.src\n  let cur_src = mem(() => src_on(cur()))\n  let cur_options = mem(() => m().decision_tree[cur()]?.options)\n  let video_style=` width:400px;  `\n  let video_smol = `width: 85px;`\n\n  const nuxt = (option) => h(\"div\",\n                             h(\"video\",\n                               {src: src_on(option.next), style: video_smol, controls: true}),\n                             h(\"p\", option.message)\n                            )\n  let split = `\n  display: grid;\n  grid-template-columns: 1fr 1fr;\n  `\n  return h(\"div\",\n           // next prev\n           h(\"div\", \n             h(\"button\", {onclick:prev}, \"prev\"),\n             h(\"span\", cur),\n             h(\"button\", {onclick:next}, \"next\"),\n            ),\n\n           // video\n           h(\"div\", {style: split},\n             h(\"video\", {src: cur_src, style:video_style, controls: true}),\n             mem(() => cur_options()?.map(nuxt))\n            )\n           \n          )\n}\n  ",
-      "cursor": 0
+      "drag_w": 600,
+      "drag_h": 530
     }
   ],
   "output": "",
   "properties": {
     "panzoom": {
-      "initialX": -4169.8510674072095,
-      "initialY": -1380.527222763222,
-      "initialZoom": 1.276934004392138
+      "initialX": -4039.2981761422243,
+      "initialY": -710.3003723683,
+      "initialZoom": 0.814208984375
     },
     "buffer": [
       -1,
