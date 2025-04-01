@@ -1,12 +1,7 @@
 [
   {
     "src": "video1.mp4",
-    "options": [
-      {
-        "text": "random",
-        "next": 2
-      }
-    ],
+    "options": [],
     "subtitles": [],
     "controller": {}
   },
