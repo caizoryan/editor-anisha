@@ -1,57 +1,45 @@
 [
   {
-    "src": "video1.mp4",
+    "src": "1_A1-2.mp4",
     "options": [],
     "subtitles": [],
-    "controller": {}
+    "controller": {},
+    "auto": 1
   },
   {
-    "src": "video2.mp4",
+    "src": "2_OP_lookaround.mp4",
     "options": [
       {
-        "text": "random",
-        "next": 4
+        "text": "something",
+        "next": 2
       }
     ],
     "subtitles": [],
     "controller": {}
   },
   {
-    "src": "video3.mp4",
-    "options": [
-      {
-        "text": "random",
-        "next": 0
-      }
-    ],
+    "src": "3_A3-4.mp4",
+    "options": [],
     "subtitles": [],
     "controller": {},
-    "auto": 0
+    "auto": 3
   },
   {
-    "src": "video4.mp4",
-    "options": [
-      {
-        "text": "random",
-        "next": 5
-      }
-    ],
+    "src": "4_OP_Getup&Explore.mp4",
+    "options": [],
     "subtitles": [],
-    "controller": {}
+    "controller": {},
+    "auto": 5
   },
   {
-    "src": "video5.mp4",
-    "options": [
-      {
-        "text": "random",
-        "next": 6
-      }
-    ],
+    "src": "5_A5-B3.mp4",
+    "options": [],
     "subtitles": [],
-    "controller": {}
+    "controller": {},
+    "auto": 5
   },
   {
-    "src": "video6.mp4",
+    "src": "6_OP_Interact.mp4",
     "options": [
       {
         "text": "random",
@@ -62,18 +50,14 @@
     "controller": {}
   },
   {
-    "src": "video7.mp4",
-    "options": [
-      {
-        "text": "random",
-        "next": 1
-      }
-    ],
+    "src": "7_NotReal.mp4",
+    "options": [],
     "subtitles": [],
-    "controller": {}
+    "controller": {},
+    "auto": 7
   },
   {
-    "src": "video8.mp4",
+    "src": "9_OP_Run.mp4",
     "options": [
       {
         "text": "random",
@@ -84,7 +68,7 @@
     "controller": {}
   },
   {
-    "src": "video9.mp4",
+    "src": "10_C2.mp4",
     "options": [
       {
         "text": "random",
