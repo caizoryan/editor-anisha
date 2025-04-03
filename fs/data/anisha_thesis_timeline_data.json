@@ -3,39 +3,49 @@
     "src": "1_A1-2.mp4",
     "options": [],
     "subtitles": [],
-    "controller": {},
+    "controller": {
+      "viddy": {}
+    },
     "auto": 1
   },
   {
     "src": "2_OP_lookaround.mp4",
     "options": [
       {
-        "text": "something",
+        "text": "testing",
         "next": 2
       }
     ],
     "subtitles": [],
-    "controller": {}
+    "controller": {
+      "viddy": {}
+    }
   },
   {
     "src": "3_A3-4.mp4",
     "options": [],
     "subtitles": [],
-    "controller": {},
+    "controller": {
+      "viddy": {}
+    },
     "auto": 3
   },
   {
     "src": "4_OP_Getup&Explore.mp4",
     "options": [],
     "subtitles": [],
-    "controller": {},
+    "controller": {
+      "viddy": {}
+    },
     "auto": 5
   },
   {
     "src": "5_A5-B3.mp4",
     "options": [],
     "subtitles": [],
-    "controller": {},
+    "controller": {
+      "viddy": {}
+    },
     "auto": 5
   },
   {
@@ -47,13 +57,17 @@
       }
     ],
     "subtitles": [],
-    "controller": {}
+    "controller": {
+      "viddy": {}
+    }
   },
   {
     "src": "7_NotReal.mp4",
     "options": [],
     "subtitles": [],
-    "controller": {},
+    "controller": {
+      "viddy": {}
+    },
     "auto": 7
   },
   {
@@ -65,7 +79,9 @@
       }
     ],
     "subtitles": [],
-    "controller": {}
+    "controller": {
+      "viddy": {}
+    }
   },
   {
     "src": "10_C2.mp4",
@@ -76,6 +92,8 @@
       }
     ],
     "subtitles": [],
-    "controller": {}
+    "controller": {
+      "viddy": {}
+    }
   }
 ]
