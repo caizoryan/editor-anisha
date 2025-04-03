@@ -149,6 +149,31 @@
     "src": "14_C5-7.mp4",
     "options": [
       {
+        "text": "Run into tunnel",
+        "next": 14
+      },
+      {
+        "text": "Explore",
+        "next": 16
+      }
+    ],
+    "subtitles": [],
+    "controller": {
+      "viddy": {}
+    }
+  },
+  {
+    "src": "15_Runintotunnel.mp4",
+    "options": [],
+    "subtitles": [],
+    "controller": {
+      "viddy": {}
+    }
+  },
+  {
+    "src": "16_C7.mp4",
+    "options": [
+      {
         "text": "random",
         "next": 2
       }
@@ -159,7 +184,102 @@
     }
   },
   {
-    "src": "15_Runintotunnel.mp4",
+    "src": "17_C8.mp4",
+    "options": [],
+    "subtitles": [],
+    "controller": {
+      "viddy": {}
+    },
+    "auto": 17
+  },
+  {
+    "src": "18_D3-6.mp4",
+    "options": [],
+    "subtitles": [],
+    "controller": {
+      "viddy": {}
+    },
+    "auto": 18
+  },
+  {
+    "src": "19_OP_dinner-exit.mp4",
+    "options": [
+      {
+        "text": "Use Exit Door",
+        "next": 19
+      },
+      {
+        "text": "Go to dinner with friends",
+        "next": 20
+      }
+    ],
+    "subtitles": [],
+    "controller": {
+      "viddy": {}
+    }
+  },
+  {
+    "src": "20_choose-exit.mp4",
+    "options": [],
+    "subtitles": [],
+    "controller": {
+      "viddy": {}
+    }
+  },
+  {
+    "src": "21_choose-dinner.mp4",
+    "options": [],
+    "subtitles": [],
+    "controller": {
+      "viddy": {}
+    },
+    "auto": 21
+  },
+  {
+    "src": "22_E3.mp4",
+    "options": [],
+    "subtitles": [],
+    "controller": {
+      "viddy": {}
+    },
+    "auto": 22
+  },
+  {
+    "src": "23_OP_Decidetosit.mp4",
+    "options": [
+      {
+        "text": "Choose to sit",
+        "next": 23
+      },
+      {
+        "text": "Choose to leave",
+        "next": 24
+      }
+    ],
+    "subtitles": [],
+    "controller": {
+      "viddy": {}
+    }
+  },
+  {
+    "src": "24_choose-sitwthem.mp4",
+    "options": [],
+    "subtitles": [],
+    "controller": {
+      "viddy": {}
+    }
+  },
+  {
+    "src": "25_choose-toleave.mp4",
+    "options": [],
+    "subtitles": [],
+    "controller": {
+      "viddy": {}
+    },
+    "auto": 0
+  },
+  {
+    "src": "26_farewell.mp4",
     "options": [
       {
         "text": "random",
