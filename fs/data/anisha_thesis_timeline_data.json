@@ -12,7 +12,7 @@
     "src": "2_OP_lookaround.mp4",
     "options": [
       {
-        "text": "testing",
+        "text": "Look Around",
         "next": 2
       }
     ],
@@ -57,7 +57,7 @@
     "src": "6_OP_Interact.mp4",
     "options": [
       {
-        "text": "random",
+        "text": "Interact",
         "next": 6
       }
     ],
@@ -76,11 +76,20 @@
     "auto": 7
   },
   {
+    "src": "8_B6.mp4",
+    "options": [],
+    "subtitles": [],
+    "controller": {
+      "viddy": {}
+    },
+    "auto": 8
+  },
+  {
     "src": "9_OP_Run.mp4",
     "options": [
       {
-        "text": "random",
-        "next": 3
+        "text": "Run",
+        "next": 9
       }
     ],
     "subtitles": [],
@@ -90,24 +99,19 @@
   },
   {
     "src": "10_C2.mp4",
-    "options": [
-      {
-        "text": "random",
-        "next": 2
-      }
-    ],
+    "options": [],
     "subtitles": [],
     "controller": {
       "viddy": {}
-    }
+    },
+    "auto": 10
   },
-
   {
     "src": "11_OP_Explore.mp4",
     "options": [
       {
-        "text": "random",
-        "next": 2
+        "text": "Explore",
+        "next": 11
       }
     ],
     "subtitles": [],
@@ -115,27 +119,25 @@
       "viddy": {}
     }
   },
-
   {
     "src": "12_C3-4.mp4",
-    "options": [
-      {
-        "text": "random",
-        "next": 2
-      }
-    ],
+    "options": [],
     "subtitles": [],
     "controller": {
       "viddy": {}
-    }
+    },
+    "auto": 12
   },
-
   {
     "src": "13_OP_Explore.mp4",
     "options": [
       {
-        "text": "random",
-        "next": 2
+        "text": "run into tunnel",
+        "next": 14
+      },
+      {
+        "text": "explore rest of the room",
+        "next": 13
       }
     ],
     "subtitles": [],
@@ -143,7 +145,6 @@
       "viddy": {}
     }
   },
-
   {
     "src": "14_C5-7.mp4",
     "options": [
@@ -157,7 +158,6 @@
       "viddy": {}
     }
   },
-
   {
     "src": "15_Runintotunnel.mp4",
     "options": [
@@ -171,5 +171,4 @@
       "viddy": {}
     }
   }
-
 ]

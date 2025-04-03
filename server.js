@@ -370,7 +370,7 @@ endpoints.forEach(async (end) => {
 })
 
 
-const port = 8888;
+const port = 8889;
 app.listen(port, () => {
 	console.log(`Server running on port ${port}`);
 });
