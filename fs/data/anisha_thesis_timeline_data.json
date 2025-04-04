@@ -168,7 +168,8 @@
     "subtitles": [],
     "controller": {
       "viddy": {}
-    }
+    },
+    "auto": 0
   },
   {
     "src": "16_C7.mp4",
