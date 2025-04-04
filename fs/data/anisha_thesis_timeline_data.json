@@ -160,7 +160,8 @@
     "subtitles": [],
     "controller": {
       "viddy": {}
-    }
+    },
+    "auto": 14
   },
   {
     "src": "15_Runintotunnel.mp4",
@@ -268,7 +269,8 @@
     "subtitles": [],
     "controller": {
       "viddy": {}
-    }
+    },
+    "auto": 0
   },
   {
     "src": "25_choose-toleave.mp4",
