@@ -42,12 +42,12 @@
     },
     {
       "type": "code",
-      "output": "import {if_then,mounted,mem,mut, eff_on, render, sig_set as sig, h} from \"/lib/tapri/monke.js\"\nimport {hdom} from \"/lib/tapri/hdom/index.js\"\nimport { THREE, addons } from \"/lib/threejs/three.js\"\nimport {Keymanager} from \"/lib/keymanager.js\"\n\nconst M = mut({\n  fn: {},\n  eff_on: [],\n  off: {\n    x: 0,\n    y: -10,\n    z: -.1,\n  }\n})\n\ndocument.M = M\nlet ws = new WebSocket(\"ws://localhost:8881/data\")\n\nws.onopen = () => {\n    console.log(\"connected\")\n}\n\nlet cursor_x = sig(0)\nlet cursor_y = sig(0)\nlet press = sig(false)\n\nlet cursor_move_x = (val) => {\n  // check if within bounds\n  if (cursor_x() + val < window.innerWidth \n      && cursor_x() + val > 0\n     ) cursor_x.set(cursor_x() + val)\n}\n\nlet cursor_move_y = (val) => {\n  // check if within bounds\n  if (cursor_y() + val < window.innerHeight \n      && cursor_y() + val > 0\n     ) cursor_y.set(cursor_y() + val)\n}\n\nlet scale = 40\n\nws.onmessage = (e) => {\n  let data = JSON.parse(e.data)\n  console.log(data.pressed)\n  press.set(data.pressed)\n  if (data.x > 580 && data.x < 900){\n    cursor_move_x(.5)\n  }\n  \n  if (data.x < 500 && data.x > 150) {\n    cursor_move_x(-.5)\n  }\n  \n  if (data.x > 900){\n    cursor_move_x(scale)\n  }\n  \n  if (data.x < 50){\n    cursor_move_x(-scale)\n  }\n  \n  if (data.y > 900){\n    cursor_move_y(scale)\n  }\n  \n  if (data.y < 50){\n    cursor_move_y(-scale)\n  }\n\n  \n}\n\n\n// basic styling\nlet style = document.createElement(\"style\")\nstyle.innerText= `*{padding: 0;margin:0}`\ndocument.head.appendChild(style)\n\nconst scene = new THREE.Scene();\nconst camera = new THREE.PerspectiveCamera( 85, window.innerWidth / window.innerHeight, 0.1, 1000 );\nconst orbit = addons.OrbitControls\nconst loader = new THREE.TextureLoader()\nconst renderer = new THREE.WebGLRenderer();\n\nfunction initTHREE(){\n  renderer.setSize( window.innerWidth, window.innerHeight );\n  document.querySelector(\"#THREE\")?.appendChild( renderer.domElement );\n  animate()\n}\n\nfunction apply_offset(){ }\n\nlet c = new orbit(camera, renderer.domElement)\ncamera.position.z = 3.3;\nc.update()\n\nlet keys = new Keymanager()\nkeys.on(\"ArrowUp\", () => camera.position.z -= 2)\nkeys.on(\"ArrowDown\", () => camera.position.z += 2)\n\nwindow.addEventListener(\"keydown\",(e) => keys.event(e))\n\nfunction animate(d) {\n  requestAnimationFrame(animate)\n  \n  renderer.render( scene, camera );\n  c.update()\n}\n\n\nlet css = mut([`\n button.option {\n    border: 1px solid white;\n    background: #222a;\n    color: white;\n    font-size: 1.9em;\n    font-family: hermit;\n    min-width: 200px;\n    text-transform: uppercase;\n    padding: .5em;\n    margin-right: 3em;\n }\n\n button.selected.option {\n    background: white;\n    color: black;\n }\n \n button.option:hover {\n    background: white;\n    color: black;\n    cursor: crosshair;\n }\n\n`])\nlet css_str = mem(() => css.join(`\\n`))\nlet current = sig(0)\nlet selected = sig(null)\n\nlet fns = () => cursor_x() && cursor_y()\nconst play_fn = (i) => () => {\n  decision_tree.forEach(n => {\n    n.controller?.focus(false)\n    n.controller?.pause()\n  })\n  \n  current.set(i)\n  decision_tree[i].controller?.play()\n}\n\nsetTimeout(() => {\n  play_fn(12)()\n}, 100)\n\nconst Root = () => {\n  setTimeout(() => {\n    decision_tree.forEach(n => {\n      n.controller?.focus(false)\n      n.controller?.pause()\n    })\n  }, 5)\n  \n  mounted(initTHREE)\n  let style = `\n    all: unset;\n    color: white;\n    font-family: monospace;\n    border: 1px dotted #fff8;\n    padding: .5em;\n  `\n\n  \n  let button = [\n      ...decision_tree.map((node, i) => [\n    \"button\",\n    {style, onclick: play_fn(i)},\n    node.src\n  ])]\n\n\n  let debug = sig(false)\n  let current_node = mem(() => decision_tree[current()])\n  let options = mem(() => current_node()?.options)\n  let next_btns = mem(() => options().map((opt, i) => \n    hdom([\"button\" \n          , {\n            class: mem(() => {\n              console.log(\"running!\")\n              return `option ${i == selected() ? \"selected\" : \"\"}`\n            }),\n            index: i,\n            onclick: play_fn(opt.next)}, \n          opt.text ])))\n  \n  let cursor_style = mem(() => `\n    width: 20px;\n    height: 20px;\n    position: fixed;\n    top: ${cursor_y()}px;\n    left: ${cursor_x()}px;\n    background-color: ${options()?.length > 0 ? \"yellow\": \"#ff01\"};\n  `)\n  \n  eff_on(press, () => {\n    if (press()){\n      console.log(\"PRESSED\")\n      let selected_option = options()[selected()]\n      if (selected_option) {\n        play_fn(selected_option.next)()\n      }\n    }\n  })\n\n  eff_on(fns, () => {\n    let found = null\n    document.querySelectorAll(\"button.option\")\n      .forEach((el) => {\n        let {x, y, width, height} = el.getBoundingClientRect();\n        console.log(el, x)\n        if (\n          // x position\n          cursor_x() > x && cursor_x() < x+width\n          &&\n          // y position\n          cursor_y() > y && cursor_y() < y+height\n        ) \n        {\n          console.log(\"intersection!\", el.getAttribute(\"index\"))\n          found = parseInt(el.getAttribute(\"index\"))\n        }\n    })\n  \n    selected.set(found)\n    console.log(\"selected\", selected())\n  })\n\n  let s = `filter: saturate(1);`\n  \n  let container = `\n    position: fixed;\n    bottom: 2em;\n    left: 5em;\n  `\n  \n  let dec = `\n  position: fixed;\n  bottom: 3em;\n  left: 0;\n  width: 100vw;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  `\n  \n  let d = hdom([\"#debug\",  DebugDom, \n     [\"#container\", {style: container}, button ]],) \n  \n  let three = () => \n    hdom([\"#THREE\",  {style: s},\n     [\"#decisions\", {style: dec}, next_btns ],\n     [\"button\", {\n       style: \"position:fixed\",\n       onclick: () => debug.set(!debug())}, \"debug\"],\n          mem(() => debug() ? d() : \"\")])\n  \n  return hdom(\n    [\"div\",\n      [\"style\", css_str],\n      [\".main\",  three],\n      [\".cursor\", {style: cursor_style}]\n    ]\n  )\n}\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+      "output": "import {if_then,mounted,mem,mut, eff_on, render, sig_set as sig, h} from \"/lib/tapri/monke.js\"\nimport {hdom} from \"/lib/tapri/hdom/index.js\"\nimport { THREE, addons } from \"/lib/threejs/three.js\"\nimport {Keymanager} from \"/lib/keymanager.js\"\n\nconst M = mut({\n  fn: {},\n  eff_on: [],\n  off: {\n    x: 0,\n    y: -10,\n    z: -.1,\n  }\n})\n\ndocument.M = M\nlet ws = new WebSocket(\"ws://localhost:8881/data\")\n\nws.onopen = () => {\n    console.log(\"connected\")\n}\n\nlet cursor_x = sig(0)\nlet cursor_y = sig(0)\nlet press = sig(false)\n\nlet cursor_move_x = (val) => {\n  // check if within bounds\n  if (cursor_x() + val < window.innerWidth \n      && cursor_x() + val > 0\n     ) cursor_x.set(cursor_x() + val)\n}\n\nlet cursor_move_y = (val) => {\n  // check if within bounds\n  if (cursor_y() + val < window.innerHeight \n      && cursor_y() + val > 0\n     ) cursor_y.set(cursor_y() + val)\n}\n\nlet scale = 20\n\nws.onmessage = (e) => {\n  let data = JSON.parse(e.data)\n  console.log(data.pressed)\n  press.set(data.pressed)\n  \n  if (data.x > 580 && data.x < 900){\n    cursor_move_x(scale/2)\n  }\n  \n  if (data.x < 500 && data.x > 150) {\n    cursor_move_x(-scale/2)\n  }\n  \n  if (data.x > 900){\n    cursor_move_x(scale)\n  }\n  \n  if (data.x < 50){\n    cursor_move_x(-scale)\n  }\n  \n  if (data.y > 900){\n    cursor_move_y(scale)\n  }\n  \n  if (data.y < 50){\n    cursor_move_y(-scale)\n  }\n\n  \n}\n\n\n// basic styling\nlet style = document.createElement(\"style\")\nstyle.innerText= `*{padding: 0;margin:0}`\ndocument.head.appendChild(style)\n\nconst scene = new THREE.Scene();\nconst camera = new THREE.PerspectiveCamera( 85, window.innerWidth / window.innerHeight, 0.1, 1000 );\nconst orbit = addons.OrbitControls\nconst loader = new THREE.TextureLoader()\nconst renderer = new THREE.WebGLRenderer();\n\nfunction initTHREE(){\n  renderer.setSize( window.innerWidth, window.innerHeight );\n  document.querySelector(\"#THREE\")?.appendChild( renderer.domElement );\n  animate()\n}\n\nfunction apply_offset(){ }\n\n//let c = new orbit(camera, renderer.domElement)\ncamera.position.z = 3.3;\n//c.update()\n\nlet keys = new Keymanager()\nkeys.on(\"ArrowUp\", () => camera.position.z -= 2)\nkeys.on(\"ArrowDown\", () => camera.position.z += 2)\n\nwindow.addEventListener(\"keydown\",(e) => keys.event(e))\nlet old_x = 0\nlet old_y = 0\n\nconst lerp = (x, y, a) => x * (1 - a) + y * a;\n\nfunction animate(d) {\n  requestAnimationFrame(animate)\n  old_x = lerp(old_x, cursor_x(), .1) \n  old_y = lerp(old_y, cursor_y(), .1) \n  \n  camera.position.x = ((old_x / window.innerWidth) - .5) / 4\n  camera.position.y = ((old_y / window.innerWidth) - .5) / 4\n  \n  camera.lookAt(0,0,0)\n  \n  renderer.render( scene, camera );\n  //c.update()\n}\n\n\nlet css = mut([`\n button.option {\n    border: 1px solid white;\n    background: #222a;\n    color: white;\n    font-size: 1.9em;\n    font-family: hermit;\n    min-width: 200px;\n    text-transform: uppercase;\n    padding: .5em;\n    margin-right: 3em;\n }\n\n button.selected.option {\n    background: white;\n    color: black;\n }\n \n button.option:hover {\n    background: white;\n    color: black;\n    cursor: crosshair;\n }\n\n`])\nlet css_str = mem(() => css.join(`\\n`))\nlet current = sig(0)\nlet selected = sig(null)\n\nlet fns = () => cursor_x() && cursor_y()\nconst play_fn = (i) => () => {\n  decision_tree.forEach(n => {\n    n.controller?.focus(false)\n    n.controller?.pause()\n  })\n  \n  current.set(i)\n  decision_tree[i].controller?.play()\n}\n\nsetTimeout(() => {\n  play_fn(12)()\n}, 100)\n\nconst Root = () => {\n  setTimeout(() => {\n    decision_tree.forEach(n => {\n      n.controller?.focus(false)\n      n.controller?.pause()\n    })\n  }, 5)\n  \n  mounted(initTHREE)\n  let style = `\n    all: unset;\n    color: white;\n    font-family: monospace;\n    border: 1px dotted #fff8;\n    padding: .5em;\n  `\n\n  \n  let button = [\n      ...decision_tree.map((node, i) => [\n    \"button\",\n    {style, onclick: play_fn(i)},\n    node.src\n  ])]\n\n\n  let debug = sig(false)\n  let current_node = mem(() => decision_tree[current()])\n  let options = mem(() => current_node()?.options)\n  let next_btns = mem(() => options().map((opt, i) => \n    hdom([\"button\" \n          , {\n            class: mem(() => {\n              console.log(\"running!\")\n              return `option ${i == selected() ? \"selected\" : \"\"}`\n            }),\n            index: i,\n            onclick: play_fn(opt.next)}, \n          opt.text ])))\n  \n  let cursor_style = mem(() => `\n    width: 20px;\n    height: 20px;\n    position: fixed;\n    top: ${cursor_y()}px;\n    left: ${cursor_x()}px;\n    background-color: ${options()?.length > 0 ? \"yellow\": \"#ff01\"};\n  `)\n  \n  eff_on(press, () => {\n    if (press()){\n      console.log(\"PRESSED\")\n      let selected_option = options()[selected()]\n      if (selected_option) {\n        play_fn(selected_option.next)()\n      }\n    }\n  })\n\n  eff_on(fns, () => {\n    let found = null\n    document.querySelectorAll(\"button.option\")\n      .forEach((el) => {\n        let {x, y, width, height} = el.getBoundingClientRect();\n        console.log(el, x)\n        if (\n          // x position\n          cursor_x() > x && cursor_x() < x+width\n          &&\n          // y position\n          cursor_y() > y && cursor_y() < y+height\n        ) \n        {\n          console.log(\"intersection!\", el.getAttribute(\"index\"))\n          found = parseInt(el.getAttribute(\"index\"))\n        }\n    })\n  \n    selected.set(found)\n    console.log(\"selected\", selected())\n  })\n\n  let s = `filter: saturate(1);`\n  \n  let container = `\n    position: fixed;\n    bottom: 2em;\n    left: 5em;\n  `\n  \n  let dec = `\n  position: fixed;\n  bottom: 3em;\n  left: 0;\n  width: 100vw;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  `\n  \n  let d = hdom([\"#debug\",  DebugDom, \n     [\"#container\", {style: container}, button ]],) \n  \n  let three = () => \n    hdom([\"#THREE\",  {style: s},\n     [\"#decisions\", {style: dec}, next_btns ],\n     [\"button\", {\n       style: \"position:fixed\",\n       onclick: () => debug.set(!debug())}, \"debug\"],\n          mem(() => debug() ? d() : \"\")])\n  \n  return hdom(\n    [\"div\",\n      [\"style\", css_str],\n      [\".main\",  three],\n      [\".cursor\", {style: cursor_style}]\n    ]\n  )\n}\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
       "start": 0,
       "drag_x": 1013,
       "drag_y": 354,
       "focused": false,
-      "cursor": 4603,
+      "cursor": 2555,
       "active": true,
       "focus": true,
       "drag_w": 600,
@@ -56,7 +56,7 @@
     {
       "type": "code",
       "id": "he3gnn",
-      "start": 5822,
+      "start": 6146,
       "drag_x": 1820.1371397277696,
       "drag_y": 670.9804086103186,
       "focused": false,
@@ -70,7 +70,7 @@
     {
       "type": "code",
       "id": "v2a3aw",
-      "start": 6222,
+      "start": 6546,
       "drag_x": 2515.8732356681644,
       "drag_y": 1120.9098588534523,
       "focused": false,
@@ -84,7 +84,7 @@
     {
       "type": "code",
       "id": "mf4rl",
-      "start": 6795,
+      "start": 7119,
       "drag_x": 4393.437441085362,
       "drag_y": 2320.2884292730214,
       "focused": false,
@@ -100,7 +100,7 @@
       "id": "uhjqp5",
       "active": false,
       "focus": false,
-      "start": 7374,
+      "start": 7698,
       "drag_x": 5044.745469327453,
       "drag_y": 2319.986197638788,
       "drag_w": 600,
@@ -112,7 +112,7 @@
     {
       "type": "video-component",
       "id": "agbf5v",
-      "start": 13459,
+      "start": 13783,
       "drag_x": 5661.240728311334,
       "drag_y": 1494.4676542614575,
       "drag_w": 600,
@@ -125,7 +125,7 @@
     {
       "type": "code",
       "id": "wcbpv2",
-      "start": 13459,
+      "start": 13783,
       "drag_x": 5731.4967486589885,
       "drag_y": 2578.1067583454196,
       "focused": false,
@@ -140,9 +140,9 @@
   "output": "",
   "properties": {
     "panzoom": {
-      "initialX": -962.9999999999995,
-      "initialY": -303.9999999999999,
-      "initialZoom": 1
+      "initialX": -793.1570361561396,
+      "initialY": -244.64717749187898,
+      "initialZoom": 0.832336659581579
     },
     "buffer": [
       3,
